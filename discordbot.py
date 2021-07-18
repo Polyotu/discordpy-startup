@@ -9,7 +9,7 @@ import io
 bot = commands.Bot(command_prefix='$dip')
 token = os.environ['DISCORD_BOT_TOKEN']
 
-blankPicture=np.zeros([1000,1000, 3])
+blankPicture=np.zeros([500,500, 3])
 
 savedPictureName="EztakJ-VoAYSg9R.jpeg"
 
@@ -31,7 +31,9 @@ async def pic(ctx):
     
 @bot.command()
 async def pic2(ctx):
-    fileObj = discord.File(io.BytesIO(blankPicture),filename="blank.png")
+    _, num_bytes = cv2.imencode('.jpeg', blankPicture)
+    num_bytes = num_bytes.tobytes()
+    fileObj = discord.File(io.BytesIO(num_bytes),filename="blank.png")
     await ctx.send(file=fileObj)
 
 bot.run(token)
