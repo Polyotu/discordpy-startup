@@ -31,7 +31,7 @@ async def pic(ctx):
     
 @bot.command()
 async def pic2(ctx):
-    fileObj = discord.File(io.BytesIO(blankPicture.encode()))
+    fileObj = discord.File(io.BytesIO(blankPicture))
     await ctx.send(file=fileObj)
 
 bot.run(token)
