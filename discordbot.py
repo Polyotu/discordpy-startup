@@ -6,7 +6,7 @@ import numpy as np
 import cv2
 import io
 
-bot = commands.Bot(command_prefix='%dip')
+bot = commands.Bot(command_prefix='$dip')
 token = os.environ['DISCORD_BOT_TOKEN']
 
 blankPicture=np.zeros([400, 800, 3])
@@ -32,6 +32,6 @@ async def pic(ctx):
 @bot.command()
 async def pic2(ctx):
     fileObj = discord.File(io.BytesIO(blankPicture))
-    await ctx.send(file=fileObj)
+    await ctx.send(file=fileObj,filename="blank.png")
 
 bot.run(token)
