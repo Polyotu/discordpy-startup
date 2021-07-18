@@ -1,10 +1,11 @@
 from discord.ext import commands
+import discord
 import os
 import traceback
 import numpy as np
 import cv2
 
-bot = commands.Bot(command_prefix='//')
+bot = commands.Bot(command_prefix='///')
 token = os.environ['DISCORD_BOT_TOKEN']
 
 blankPicture=np.zeros([400, 800, 3])
