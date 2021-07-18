@@ -27,5 +27,10 @@ async def ping(ctx):
 async def pic(ctx):
     fileObj = discord.File(savedPictureName)
     await ctx.send(file=fileObj)
+    
+@bot.command()
+async def pic2(ctx):
+    fileObj = discord.File(io.BytesIO(blankPicture.encode()))
+    await ctx.send(file=fileObj)
 
 bot.run(token)
