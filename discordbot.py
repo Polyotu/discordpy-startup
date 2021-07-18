@@ -6,10 +6,10 @@ import numpy as np
 import cv2
 import io
 
-bot = commands.Bot(command_prefix='%dip')
+bot = commands.Bot(command_prefix='$dip')
 token = os.environ['DISCORD_BOT_TOKEN']
 
-blankPicture=np.zeros([400, 800, 3])
+blankPicture=np.zeros([1000,1000, 3])
 
 savedPictureName="EztakJ-VoAYSg9R.jpeg"
 
