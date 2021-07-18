@@ -1,10 +1,12 @@
 from discord.ext import commands
 import os
 import traceback
+import numpy as np
+import cv2
 
-bot = commands.Bot(command_prefix='$mk2')
+bot = commands.Bot(command_prefix='//')
 token = os.environ['DISCORD_BOT_TOKEN']
-
+blankPicture=np.zeros([400, 800, 3])
 
 @bot.event
 async def on_command_error(ctx, error):
@@ -17,5 +19,8 @@ async def on_command_error(ctx, error):
 async def ping(ctx):
     await ctx.send('pong')
 
+# @bot.command()
+# async def pic(ctx):
+#     await ctx.send(file=)
 
 bot.run(token)
