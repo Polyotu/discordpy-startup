@@ -10,7 +10,7 @@ import copy
 from datetime import datetime
 
 INITIAL_EXTENSIONS = [
-    'cogs.cog',
+    'cogs.cog'
 ]
 
 class MyBot(commands.Bot):
@@ -29,11 +29,11 @@ class MyBot(commands.Bot):
         print(bot.user.id)
         print('-------')
     
-#     @bot.event
-    async def on_command_error(ctx, error):
-        orig_error = getattr(error, "original", error)
-        error_msg = ''.join(traceback.TracebackException.from_exception(orig_error).format())
-        await ctx.send(error_msg)
+# #     @bot.event
+#     async def on_command_error(ctx, error):
+#         orig_error = getattr(error, "original", error)
+#         error_msg = ''.join(traceback.TracebackException.from_exception(orig_error).format())
+#         await ctx.send(error_msg)
 
 if __name__ == '__main__':
     intents=discord.Intents.all()
