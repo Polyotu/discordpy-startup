@@ -17,7 +17,7 @@ height=500
 width=500
 blank=np.zeros([width,height, 3])
 canvas=np.zeros([width,height, 3])
-fillMask=np.zeros([width+2,height+2,1])
+fillMask=np.zeros([width+2,height+2],np.uint8)
 
 savedPictureName="EztakJ-VoAYSg9R.jpeg"
 
