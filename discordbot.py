@@ -120,6 +120,8 @@ async def fill(ctx):
     """ランダムな点を起点に塗りつぶし"""
     global canvas
     global fillMask
+    global width
+    global height
     point=(random.randint(1,width-1),random.randint(1,height-1))
     fillColor=(random.randint(0,1)*200+55,random.randint(0,1)*200+55,random.randint(0,1)*200+55)
     retval,canvas,mask,rect = cv2.floodFill(image=canvas, mask=fillMask, seedPoint=point, newVal=fillColor,flags=4)
@@ -129,5 +131,6 @@ async def fill(ctx):
     fileObj = discord.File(io.BytesIO(num_bytes),filename="blank.png")
     await ctx.send("point:"+str(point))
     await ctx.send(file=fileObj)
+    fillMask=np.zeros([width+2,height+2],np.uint8)
 
 bot.run(token)
