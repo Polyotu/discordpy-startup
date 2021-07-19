@@ -126,5 +126,9 @@ async def fill(ctx):
     fileObj = discord.File(io.BytesIO(num_bytes),filename="blank.png")
     await ctx.send("point:"+str(point))
     await ctx.send(file=fileObj)
+    _, num_bytes = cv2.imencode('.jpeg',mask)
+    num_bytes = num_bytes.tobytes()
+    fileObj = discord.File(io.BytesIO(num_bytes),filename="blank.png")
+    await ctx.send(file=fileObj)
 
 bot.run(token)
