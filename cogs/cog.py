@@ -8,14 +8,10 @@ import io
 import random
 import copy
 from datetime import datetime
+import asyncio
 
 
 class MyCog(commands.Cog):
-    
-    def __init__(self,bot):
-        self.bot=bot
-        #self.bot.remove_command("help")
-    
     height=512
     width=512
     blank=np.zeros([width,height, 3],np.uint8)
@@ -134,7 +130,9 @@ class MyCog(commands.Cog):
         "ボスニア海":{"attr":"sea","base":False,"destination":[]},
         "西地中海":{"attr":"sea","base":False,"destination":[]}
     }
-    
+    def __init__(self,bot):
+        self.bot=bot
+        #self.bot.remove_command("help")
         
     @commands.command()#group()
     async def ping(self,ctx):
@@ -245,5 +243,5 @@ class MyCog(commands.Cog):
 #             await ctx.send(file=fileObj)
     
 def setup(bot):
-    return bot.add_cog(MyCog(bot))
+    bot.add_cog(MyCog(bot))
 
