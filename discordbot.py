@@ -64,7 +64,7 @@ async def line(ctx):
     _, num_bytes = cv2.imencode('.jpeg',canvas)
     num_bytes = num_bytes.tobytes()
     fileObj = discord.File(io.BytesIO(num_bytes),filename="blank.png")
-    await ctx.send("pointA:"+String(pointA)+" pointB:"+String(pointB))
+    await ctx.send("pointA:"+str(pointA)+" pointB:"+str(pointB))
     await ctx.send(file=fileObj)
     
 @bot.command()
@@ -85,6 +85,7 @@ async def rect(ctx):
     _, num_bytes = cv2.imencode('.jpeg',canvas)
     num_bytes = num_bytes.tobytes()
     fileObj = discord.File(io.BytesIO(num_bytes),filename="blank.png")
+    await ctx.send("pointA:"+str(pointA)+" pointB:"+str(pointB))
     await ctx.send(file=fileObj)
     
 @bot.command()
