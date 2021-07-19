@@ -11,7 +11,7 @@ from datetime import datetime
 
 bot = commands.Bot(command_prefix='##')
 token = os.environ['DISCORD_BOT_TOKEN']
-defaultChannel=os.environ['DISCORD_DEFAULT_CHANNEL']
+# defaultChannel=os.environ['DISCORD_DEFAULT_CHANNEL']
 
 height=500
 width=500
@@ -36,7 +36,7 @@ async def on_ready():
     garv = bot.get_channel(defaultChannel)
     standbyLog=datetime.now()
     log=str(standbyLog)
-    await garv.send(log+"loggedin")
+#     await garv.send(log+"loggedin")
     
 @bot.command()
 async def ping(ctx):
