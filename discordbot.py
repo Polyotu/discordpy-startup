@@ -28,7 +28,7 @@ async def on_command_error(ctx, error):
 @bot.command()
 async def ping(ctx):
     """pongって応答するだけ"""
-    await ctx.send('pong 13:15')
+    await ctx.send('pong 13:53')
 
 @bot.command()
 async def pic(ctx):
@@ -46,20 +46,43 @@ async def pic2(ctx):
     await ctx.send(file=fileObj)
     
 @bot.command()
-async def draw(ctx):
+async def line(ctx):
     """キャンバスにランダムな線を1本上書きして返す"""
     global canvas
     global width
     global height
+    pointA=(random.randint(1,width-1),random.randint(1,height-1))
+    pointB=(random.randint(1,width-1),random.randint(1,height-1))
+    lineColor=(random.randint(0,1)*255,random.randint(0,1)*255,random.randint(0,1)*255)
     canvas=cv2.line(
         canvas,
-        (random.randint(1,width-1),random.randint(1,height-1)),
-        (random.randint(1,width-1),random.randint(1,height-1)),
-        (random.randint(0,1)*255,random.randint(0,1)*255,random.randint(0,1)*255),
+        pointA,
+        pointB,
+        lineColor,
         2
     )
     _, num_bytes = cv2.imencode('.jpeg',canvas)
-#     canvas=copy.deepcopy(drawedCanvas)
+    num_bytes = num_bytes.tobytes()
+    fileObj = discord.File(io.BytesIO(num_bytes),filename="blank.png")
+    await ctx.send("pointA:"+String(pointA)+" pointB:"+String(pointB))
+    await ctx.send(file=fileObj)
+    
+@bot.command()
+async def rect(ctx):
+    """キャンバスにランダムな直方体を1つ上書きして返す"""
+    global canvas
+    global width
+    global height
+    pointA=(random.randint(1,width-1),random.randint(1,height-1))
+    pointB=(random.randint(1,width-1),random.randint(1,height-1))
+    canvas=cv2.rectangle(
+        canvas,
+        pointA,
+        pointB,
+        (255,255,255),
+        2
+    )
+    _, num_bytes = cv2.imencode('.jpeg',canvas)
     num_bytes = num_bytes.tobytes()
     fileObj = discord.File(io.BytesIO(num_bytes),filename="blank.png")
     await ctx.send(file=fileObj)
