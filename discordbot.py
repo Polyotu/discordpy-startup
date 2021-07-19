@@ -10,12 +10,12 @@ import copy
 from datetime import datetime
 
 INITIAL_EXTENSIONS = [
-    'cogs.cog'
+    'cogs.cog',
 ]
 
 class MyBot(commands.Bot):
     def __init__(self,command_prefix, help_command,intents):
-        super().__init__(command_prefix, help_command=help_command,case_insensitive=True,intents=intents)
+        super().__init__(command_prefix,case_insensitive=True,intents=intents)
 
         for cog in INITIAL_EXTENSIONS:
             try:
@@ -37,7 +37,7 @@ class MyBot(commands.Bot):
 
 if __name__ == '__main__':
     intents=discord.Intents.all()
-    bot = MyBot(command_prefix='##',help_command=None,intents=intents)
+    bot = MyBot(command_prefix='##',intents=intents)
     bot.run(os.environ['DISCORD_BOT_TOKEN'])
 
 # from discord.ext import commands
