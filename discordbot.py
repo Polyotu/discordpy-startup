@@ -10,6 +10,7 @@ import copy
 
 bot = commands.Bot(command_prefix='##')
 token = os.environ['DISCORD_BOT_TOKEN']
+defaultChannel=os.environ['DISCORD_DEFAULT_CHANNEL']
 
 height=500
 width=500
@@ -24,11 +25,16 @@ async def on_command_error(ctx, error):
     error_msg = ''.join(traceback.TracebackException.from_exception(orig_error).format())
     await ctx.send(error_msg)
 
-
+@bot.event
+async def on_ready():
+    garv = bot.get_channel(defaultChannel)
+    log=str(datetime.now())
+    await garv.send(log+"loggedin")
+    
 @bot.command()
 async def ping(ctx):
     """pongって応答するだけ"""
-    await ctx.send('pong 13:53')
+    await ctx.send('pong')
 
 @bot.command()
 async def pic(ctx):
