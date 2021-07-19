@@ -230,17 +230,17 @@ class MyCog(commands.Cog):
 #         await ctx.send(file=fileObj)
 #         self.fillMask=np.zeros([self.width+2,self.height+2],np.uint8)
     
-#     @commands.command()#group() 
-#     async def clear(self,ctx):
-#     """キャンバスを初期化して返す"""
-# #         if ctx.invoked_subcommand is None:
-# #             global canvas
-#         self.canvas=copy.deepcopy(self.blank)
-#         self.canvas=cv2.convertScaleAbs(self.canvas)
-#         _, num_bytes = cv2.imencode('.jpeg',self.canvas)
-#         num_bytes = num_bytes.tobytes()
-#         fileObj = discord.File(io.BytesIO(num_bytes),filename="blank.png")
-#         await ctx.send(file=fileObj)
+    @commands.command()#group() 
+    async def clear(self,ctx):
+    """キャンバスを初期化して返す"""
+#         if ctx.invoked_subcommand is None:
+#             global canvas
+        self.canvas=copy.deepcopy(self.blank)
+        self.canvas=cv2.convertScaleAbs(self.canvas)
+        _, num_bytes = cv2.imencode('.jpeg',self.canvas)
+        num_bytes = num_bytes.tobytes()
+        fileObj = discord.File(io.BytesIO(num_bytes),filename="blank.png")
+        await ctx.send(file=fileObj)
         
 def setup(bot):
     return bot.add_cog(MyCog(bot))
