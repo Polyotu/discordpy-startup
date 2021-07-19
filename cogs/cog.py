@@ -134,10 +134,10 @@ class MyCog(commands.Cog):
         self.bot=bot
         #self.bot.remove_command("help")
         
-    @commands.group()
+    @commands.command()#group()
     async def ping(self,ctx):
-        if ctx.invoked_subcommand is None:
-            await ctx.send('pong'+str(MyCog.standbyLog))
+#         if ctx.invoked_subcommand is None:
+        await ctx.send('pong'+str(MyCog.standbyLog))
     
     @commands.group()
     async def status(self,ctx):
