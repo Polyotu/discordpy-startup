@@ -235,8 +235,8 @@ class MyCog(commands.Cog):
     """キャンバスを初期化して返す"""
 #         if ctx.invoked_subcommand is None:
 #             global canvas
-        self.canvas=copy.deepcopy(self.blank)
-        self.canvas=cv2.convertScaleAbs(self.canvas)
+#         self.canvas=copy.deepcopy(self.blank)
+#         self.canvas=cv2.convertScaleAbs(self.canvas)
         _, num_bytes = cv2.imencode('.jpeg',self.canvas)
         num_bytes = num_bytes.tobytes()
         fileObj = discord.File(io.BytesIO(num_bytes),filename="blank.png")
