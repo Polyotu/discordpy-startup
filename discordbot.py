@@ -5,11 +5,16 @@ import traceback
 import numpy as np
 import cv2
 import io
+import random
+import copy
 
-bot = commands.Bot(command_prefix='$dip')
+bot = commands.Bot(command_prefix='%dip')
 token = os.environ['DISCORD_BOT_TOKEN']
 
-blankPicture=np.zeros([500,500, 3])
+height=500
+width=500
+blank=np.zeros([width,height, 3])
+canvas=np.zeros([width,height, 3])
 
 savedPictureName="EztakJ-VoAYSg9R.jpeg"
 
@@ -31,7 +36,29 @@ async def pic(ctx):
     
 @bot.command()
 async def pic2(ctx):
-    _, num_bytes = cv2.imencode('.jpeg', blankPicture)
+    _, num_bytes = cv2.imencode('.jpeg', canvas)
+    num_bytes = num_bytes.tobytes()
+    fileObj = discord.File(io.BytesIO(num_bytes),filename="blank.png")
+    await ctx.send(file=fileObj)
+    
+@bot.command()
+async def draw(ctx):
+    canvas=cv2.line(
+        canvas,
+        (random.randint(1,width-1),random.randint(1,height-1)),
+        (random.randint(1,width-1),random.randint(1,height-1)),
+        (random.randint(0,1)*255,random.randint(0,1)*255,random.randint(0,1)*255),
+        2
+    )
+    _, num_bytes = cv2.imencode('.jpeg', canvas)
+    num_bytes = num_bytes.tobytes()
+    fileObj = discord.File(io.BytesIO(num_bytes),filename="blank.png")
+    await ctx.send(file=fileObj)
+    
+@bot.command()
+async def clear(ctx):
+    canvas=copy.deepcopy(blank)
+    _, num_bytes = cv2.imencode('.jpeg', canvas)
     num_bytes = num_bytes.tobytes()
     fileObj = discord.File(io.BytesIO(num_bytes),filename="blank.png")
     await ctx.send(file=fileObj)
