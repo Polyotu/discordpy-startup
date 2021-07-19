@@ -107,9 +107,21 @@ async def clear(ctx):
     global canvas
     canvas=copy.deepcopy(blank)
     _, num_bytes = cv2.imencode('.jpeg',canvas)
-#     canvas=copy.deepcopy(clearedCanvas)
     num_bytes = num_bytes.tobytes()
     fileObj = discord.File(io.BytesIO(num_bytes),filename="blank.png")
+    await ctx.send(file=fileObj)
+    
+@bot.command()
+async def fill(ctx)
+    """ランダムな点を起点に塗りつぶし"""
+    global canvas
+    point=(random.randint(1,width-1),random.randint(1,height-1))
+    fillColor=(random.randint(0,1)*255,random.randint(0,1)*255,random.randint(0,1)*255)
+    retval,canvas,mask,rect = cv2.floodFill(canvas, None,point,fillColor)
+    _, num_bytes = cv2.imencode('.jpeg',canvas)
+    num_bytes = num_bytes.tobytes()
+    fileObj = discord.File(io.BytesIO(num_bytes),filename="blank.png")
+    await ctx.send("point:"+str(point))
     await ctx.send(file=fileObj)
 
 bot.run(token)
