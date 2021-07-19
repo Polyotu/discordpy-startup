@@ -152,27 +152,28 @@ class MyCog(commands.Cog):
 # #         if ctx.invoked_subcommand is None:
 #         fileObj = discord.File(self.savedPictureName)
 #         await ctx.send(file=fileObj)
-    @commands.command()#group() 
-    async def clear(self,ctx):
-    """キャンバスを初期化して返す"""
-#         if ctx.invoked_subcommand is None:
-#             global canvas
-#         self.canvas=copy.deepcopy(self.blank)
-#         self.canvas=cv2.convertScaleAbs(self.canvas)
-        _, num_bytes = cv2.imencode('.jpeg',self.canvas)
-        num_bytes = num_bytes.tobytes()
-        fileObj = discord.File(io.BytesIO(num_bytes),filename="blank.png")
-        await ctx.send(file=fileObj)
-        
+
 #     @commands.command()#group() 
-#     async def pic2(self,ctx):
-#         """現在のキャンバスの状態を返す，初期化済みの場合真っ黒"""
+#     async def clearCanvas(self,ctx):
+#     """キャンバスを初期化して返す"""
 # #         if ctx.invoked_subcommand is None:
-# #         global canvas
-#         _, num_bytes = cv2.imencode('.jpeg', self.canvas)
+# #             global canvas
+# #         self.canvas=copy.deepcopy(self.blank)
+# #         self.canvas=cv2.convertScaleAbs(self.canvas)
+#         _, num_bytes = cv2.imencode('.jpeg',self.canvas)
 #         num_bytes = num_bytes.tobytes()
 #         fileObj = discord.File(io.BytesIO(num_bytes),filename="blank.png")
 #         await ctx.send(file=fileObj)
+        
+    @commands.command()#group() 
+    async def pic2(self,ctx):
+        """現在のキャンバスの状態を返す，初期化済みの場合真っ黒"""
+#         if ctx.invoked_subcommand is None:
+#         global canvas
+        _, num_bytes = cv2.imencode('.jpeg', self.canvas)
+        num_bytes = num_bytes.tobytes()
+        fileObj = discord.File(io.BytesIO(num_bytes),filename="blank.png")
+        await ctx.send(file=fileObj)
 
 #     @commands.command()#group() 
 #     async def line(self,ctx):
