@@ -7,6 +7,7 @@ import cv2
 import io
 import random
 import copy
+from datetime import datetime
 
 bot = commands.Bot(command_prefix='##')
 token = os.environ['DISCORD_BOT_TOKEN']
@@ -21,6 +22,7 @@ savedPictureName="EztakJ-VoAYSg9R.jpeg"
 
 intents = discord.Intents.all()
 client = discord.Client(intents=intents)
+standbyLog=datetime.now()
 
 @client.event
 async def on_command_error(ctx, error):
@@ -30,14 +32,16 @@ async def on_command_error(ctx, error):
 
 @client.event
 async def on_ready():
+    global standbyLog
     garv = client.get_channel(defaultChannel)
-    log=str(datetime.now())
+    standbyLog=datetime.now()
+    log=str(standbyLog)
     await garv.send(log+"loggedin")
     
 @client.command()
 async def ping(ctx):
     """pongって応答するだけ"""
-    await ctx.send('pong')
+    await ctx.send('pong'+str(standbyLog))
 
 @client.command()
 async def pic(ctx):
