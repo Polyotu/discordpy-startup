@@ -139,7 +139,7 @@ class MyCog(commands.Cog):
 #         if ctx.invoked_subcommand is None:
         await ctx.send('pong'+str(MyCog.standbyLog))
     
-#     @commands.command()group()
+    @commands.command()#group()
     async def status(self,ctx):
 #         if ctx.invoked_subcommand is None:
             """国の初期ステータスをランダムに返す"""
