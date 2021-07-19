@@ -155,7 +155,7 @@ class MyCog(commands.Cog):
 
     @commands.command()#group() 
     async def clearCanvas(self,ctx):
-    """キャンバスを初期化して返す"""
+        """キャンバスを初期化して返す"""
 #         if ctx.invoked_subcommand is None:
 #             global canvas
 #         self.canvas=copy.deepcopy(self.blank)
