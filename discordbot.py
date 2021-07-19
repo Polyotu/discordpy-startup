@@ -30,13 +30,13 @@ async def on_command_error(ctx, error):
     error_msg = ''.join(traceback.TracebackException.from_exception(orig_error).format())
     await ctx.send(error_msg)
 
-@bot.event
-async def on_ready():
-    global standbyLog
-    garv = bot.get_channel(defaultChannel)
-    standbyLog=datetime.now()
-    log=str(standbyLog)
-#     await garv.send(log+"loggedin")
+# @bot.event
+# async def on_ready():
+#     global standbyLog
+#     garv = bot.get_channel(defaultChannel)
+#     standbyLog=datetime.now()
+#     log=str(standbyLog)
+# #     await garv.send(log+"loggedin")
     
 @bot.command()
 async def ping(ctx):
