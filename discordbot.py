@@ -14,8 +14,8 @@ INITIAL_EXTENSIONS = [
 ]
 
 class MyBot(commands.Bot):
-    def __init__(self, command_prefix):
-        super().__init__(command_prefix)
+    def __init__(self,command_prefix,intents):
+        super().__init__(command_prefix,case_insensitive=True,intents=intents)
 
         for cog in INITIAL_EXTENSIONS:
             try:
@@ -36,7 +36,8 @@ class MyBot(commands.Bot):
         await ctx.send(error_msg)
 
 if __name__ == '__main__':
-    bot = MyBot(command_prefix=commands.when_mentioned_or('##'))
+    intents=discord.Intents.all()
+    bot = MyBot(command_prefix=commands.when_mentioned_or('##'),intents=intents)
     bot.run(os.environ['DISCORD_BOT_TOKEN'])
 
 # from discord.ext import commands
