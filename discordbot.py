@@ -17,6 +17,7 @@ height=500
 width=500
 blank=np.zeros([width,height, 3])
 canvas=np.zeros([width,height, 3])
+mask = np.zeros((width + 2, height + 2), dtype=np.uint8)
 
 savedPictureName="EztakJ-VoAYSg9R.jpeg"
 
@@ -115,10 +116,11 @@ async def clear(ctx):
 async def fill(ctx):
     """ランダムな点を起点に塗りつぶし"""
     global canvas
+    global mask
     point=(random.randint(1,width-1),random.randint(1,height-1))
     fillColor=(random.randint(0,1)*255,random.randint(0,1)*255,random.randint(0,1)*255)
 #     retval,canvas,mask,rect = cv2.floodFill(canvas, None,point,fillColor)
-    retval,canvas,mask,rect = cv2.floodFill(image=canvas.astype('int8'), mask=blank.astype('int8'), seedPoint=point, newVal=fillColor)
+    retval,canvas,mask,rect = cv2.floodFill(image=canvas.astype('int8'), mask=mask, seedPoint=point, newVal=fillColor)
     _, num_bytes = cv2.imencode('.jpeg',canvas)
     num_bytes = num_bytes.tobytes()
     fileObj = discord.File(io.BytesIO(num_bytes),filename="blank.png")
