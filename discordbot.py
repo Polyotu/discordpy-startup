@@ -8,7 +8,7 @@ import io
 import random
 import copy
 
-bot = commands.Bot(command_prefix='%dip')
+bot = commands.Bot(command_prefix='$dip')
 token = os.environ['DISCORD_BOT_TOKEN']
 
 height=500
@@ -43,22 +43,24 @@ async def pic2(ctx):
     
 @bot.command()
 async def draw(ctx):
-    canvas=cv2.line(
+    drawedCanvas=cv2.line(
         canvas,
         (random.randint(1,width-1),random.randint(1,height-1)),
         (random.randint(1,width-1),random.randint(1,height-1)),
         (random.randint(0,1)*255,random.randint(0,1)*255,random.randint(0,1)*255),
         2
     )
-    _, num_bytes = cv2.imencode('.jpeg', canvas)
+    _, num_bytes = cv2.imencode('.jpeg',drawedCanvas)
+    canvas=copy.deepcopy(drawedCanvas)
     num_bytes = num_bytes.tobytes()
     fileObj = discord.File(io.BytesIO(num_bytes),filename="blank.png")
     await ctx.send(file=fileObj)
     
 @bot.command()
 async def clear(ctx):
-    canvas=copy.deepcopy(blank)
-    _, num_bytes = cv2.imencode('.jpeg', canvas)
+    clearedCanvas=copy.deepcopy(blank)
+    _, num_bytes = cv2.imencode('.jpeg',clearedCanvas)
+    canvas=copy.deepcopy(clearedCanvas)
     num_bytes = num_bytes.tobytes()
     fileObj = discord.File(io.BytesIO(num_bytes),filename="blank.png")
     await ctx.send(file=fileObj)
