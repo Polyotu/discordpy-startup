@@ -33,15 +33,15 @@ class MyCog(commands.Cog):
     #国の持っている辞書には，プレイヤーIDのplayer,兵のリストforceがある
     #forceは各要素が各兵力の辞書になっている
     #各兵力の辞書には，属性attr，所在地reegionがある
-    country={
-        "イギリス":{"player":None,"force":[{"attr":"army","region":"リヴァプール"},{"attr":"navy","region":"エディンバラ"},{"attr":"navy","region":"ロンドン"}]},
-        "ドイツ":{"player":None,"force":[{"attr":"army","region":"ベルリン"},{"attr":"army","region":"ミュンヘン"},{"attr":"navy","region":"キール"}]},
-        "ロシア":{"player":None,"force":[{"attr":"army","region":"モスクワ"},{"attr":"army","region":"ワルシャワ"},{"attr":"navy","region":"セヴァストポリ"},{"attr":"navy","region":"サンクトペテルブルク南岸"}]},
-        "オスマン・トルコ":{"player":None,"force":[{"attr":"army","region":"コンスタンティノープル"},{"attr":"army","region":"スミルナ"},{"attr":"navy","region":"アンカラ"}]},
-        "オーストリア・ハンガリー":{"player":None,"force":[{"attr":"army","region":"ウィーン"},{"attr":"army","region":"ブダペスト"},{"attr":"navy","region":"トリエステ"}]},
-        "イタリア":{"player":None,"force":[{"attr":"army","region":"ローマ"},{"attr":"army","region":"ヴェニス"},{"attr":"navy","region":"ナポリ"}]},
-        "フランス":{"player":None,"force":[{"attr":"army","region":"パリ"},{"attr":"army","region":"マルセイユ"},{"attr":"navy","region":"ブレスト"}]}
-    }
+#     country={
+#         "イギリス":{"player":None,"force":[{"attr":"army","region":"リヴァプール"},{"attr":"navy","region":"エディンバラ"},{"attr":"navy","region":"ロンドン"}]},
+#         "ドイツ":{"player":None,"force":[{"attr":"army","region":"ベルリン"},{"attr":"army","region":"ミュンヘン"},{"attr":"navy","region":"キール"}]},
+#         "ロシア":{"player":None,"force":[{"attr":"army","region":"モスクワ"},{"attr":"army","region":"ワルシャワ"},{"attr":"navy","region":"セヴァストポリ"},{"attr":"navy","region":"サンクトペテルブルク南岸"}]},
+#         "オスマン・トルコ":{"player":None,"force":[{"attr":"army","region":"コンスタンティノープル"},{"attr":"army","region":"スミルナ"},{"attr":"navy","region":"アンカラ"}]},
+#         "オーストリア・ハンガリー":{"player":None,"force":[{"attr":"army","region":"ウィーン"},{"attr":"army","region":"ブダペスト"},{"attr":"navy","region":"トリエステ"}]},
+#         "イタリア":{"player":None,"force":[{"attr":"army","region":"ローマ"},{"attr":"army","region":"ヴェニス"},{"attr":"navy","region":"ナポリ"}]},
+#         "フランス":{"player":None,"force":[{"attr":"army","region":"パリ"},{"attr":"army","region":"マルセイユ"},{"attr":"navy","region":"ブレスト"}]}
+#     }
     
     #地域の辞書
     #一つの地域は一つ辞書をもつ
