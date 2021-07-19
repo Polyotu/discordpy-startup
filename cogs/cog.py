@@ -243,5 +243,5 @@ class MyCog(commands.Cog):
 #             await ctx.send(file=fileObj)
     
 def setup(bot):
-    bot.add_cog(MyCog(bot))
+    return bot.add_cog(MyCog(bot))
 
