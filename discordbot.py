@@ -20,36 +20,36 @@ canvas=np.zeros([width,height, 3])
 
 savedPictureName="EztakJ-VoAYSg9R.jpeg"
 
-intents = discord.Intents.all()
-client = discord.Client(intents=intents)
+# intents = discord.Intents.all()
+# client = discord.Client(intents=intents)
 standbyLog=datetime.now()
 
-@client.event
+@bot.event
 async def on_command_error(ctx, error):
     orig_error = getattr(error, "original", error)
     error_msg = ''.join(traceback.TracebackException.from_exception(orig_error).format())
     await ctx.send(error_msg)
 
-@client.event
+@bot.event
 async def on_ready():
     global standbyLog
-    garv = client.get_channel(defaultChannel)
+    garv = bot.get_channel(defaultChannel)
     standbyLog=datetime.now()
     log=str(standbyLog)
     await garv.send(log+"loggedin")
     
-@client.command()
+@bot.command()
 async def ping(ctx):
     """pongって応答するだけ"""
     await ctx.send('pong'+str(standbyLog))
 
-@client.command()
+@bot.command()
 async def pic(ctx):
     """事前にディレクトリ内に保存されたほぼ真っ白画像を返す"""
     fileObj = discord.File(savedPictureName)
     await ctx.send(file=fileObj)
     
-@client.command()
+@bot.command()
 async def pic2(ctx):
     """現在のキャンバスの状態を返す，初期化済みの場合真っ黒"""
     global canvas
@@ -58,7 +58,7 @@ async def pic2(ctx):
     fileObj = discord.File(io.BytesIO(num_bytes),filename="blank.png")
     await ctx.send(file=fileObj)
     
-@client.command()
+@bot.command()
 async def line(ctx):
     """キャンバスにランダムな線を1本上書きして返す"""
     global canvas
@@ -80,7 +80,7 @@ async def line(ctx):
     await ctx.send("pointA:"+str(pointA)+" pointB:"+str(pointB))
     await ctx.send(file=fileObj)
     
-@client.command()
+@bot.command()
 async def rect(ctx):
     """キャンバスにランダムな直方体を1つ上書きして返す"""
     global canvas
@@ -101,7 +101,7 @@ async def rect(ctx):
     await ctx.send("pointA:"+str(pointA)+" pointB:"+str(pointB))
     await ctx.send(file=fileObj)
     
-@client.command()
+@bot.command()
 async def clear(ctx):
     """キャンバスを初期化して返す"""
     global canvas
@@ -112,4 +112,4 @@ async def clear(ctx):
     fileObj = discord.File(io.BytesIO(num_bytes),filename="blank.png")
     await ctx.send(file=fileObj)
 
-client.run(token)
+bot.run(token)
