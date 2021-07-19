@@ -118,7 +118,7 @@ async def fill(ctx):
     point=(random.randint(1,width-1),random.randint(1,height-1))
     fillColor=(random.randint(0,1)*255,random.randint(0,1)*255,random.randint(0,1)*255)
 #     retval,canvas,mask,rect = cv2.floodFill(canvas, None,point,fillColor)
-    retval,canvas,mask,rect = cv2.floodFill(image=canvas, mask=None, seedPoint=point, newVal=fillColor)
+    retval,canvas,mask,rect = cv2.floodFill(image=canvas.astype('int8'), mask=None, seedPoint=point, newVal=fillColor)
     _, num_bytes = cv2.imencode('.jpeg',canvas)
     num_bytes = num_bytes.tobytes()
     fileObj = discord.File(io.BytesIO(num_bytes),filename="blank.png")
