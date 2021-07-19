@@ -11,6 +11,11 @@ from datetime import datetime
 
 
 class MyCog(commands.Cog):
+    
+    def __init__(self,bot):
+        self.bot=bot
+        #self.bot.remove_command("help")
+    
     height=512
     width=512
     blank=np.zeros([width,height, 3],np.uint8)
@@ -130,9 +135,6 @@ class MyCog(commands.Cog):
         "西地中海":{"attr":"sea","base":False,"destination":[]}
     }
     
-    def __init__(self,bot):
-        self.bot=bot
-        #self.bot.remove_command("help")
         
     @commands.command()#group()
     async def ping(self,ctx):
