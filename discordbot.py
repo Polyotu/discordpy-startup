@@ -27,15 +27,18 @@ async def on_command_error(ctx, error):
 
 @bot.command()
 async def ping(ctx):
+    """pongって応答するだけ"""
     await ctx.send('pong')
 
 @bot.command()
 async def pic(ctx):
+    """事前にディレクトリ内に保存されたほぼ真っ白画像を返す"""
     fileObj = discord.File(savedPictureName)
     await ctx.send(file=fileObj)
     
 @bot.command()
 async def pic2(ctx):
+    """現在のキャンバスの状態を返す，初期化済みの場合真っ黒"""
     global canvas
     _, num_bytes = cv2.imencode('.jpeg', canvas)
     num_bytes = num_bytes.tobytes()
@@ -44,6 +47,7 @@ async def pic2(ctx):
     
 @bot.command()
 async def draw(ctx):
+    """キャンバスにランダムな線を1本上書きして返す"""
     global canvas
     global width
     global height
@@ -62,6 +66,7 @@ async def draw(ctx):
     
 @bot.command()
 async def clear(ctx):
+    """キャンバスを初期化して返す"""
     global canvas
     canvas=copy.deepcopy(blank)
     _, num_bytes = cv2.imencode('.jpeg',canvas)
