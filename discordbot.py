@@ -27,7 +27,7 @@ class MyBot(commands.Bot):
         print('Logged in as')
         print(bot.user.name)
         print(bot.user.id)
-        print('------')
+        print('-------')
     
 #     @bot.event
     async def on_command_error(ctx, error):
