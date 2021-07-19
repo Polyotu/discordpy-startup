@@ -118,7 +118,7 @@ async def fill(ctx):
     global canvas
     global fillMask
     point=(random.randint(1,width-1),random.randint(1,height-1))
-    fillColor=(random.randint(0,1)*255,random.randint(0,1)*255,random.randint(0,1)*255)
+    fillColor=(200,200,200)
 #     retval,canvas,mask,rect = cv2.floodFill(canvas, None,point,fillColor)
     retval,canvas,mask,rect = cv2.floodFill(image=canvas, mask=fillMask, seedPoint=point, newVal=fillColor)
     _, num_bytes = cv2.imencode('.jpeg',canvas)
