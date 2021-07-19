@@ -75,6 +75,7 @@ async def line(ctx):
         lineColor,
         2
     )
+    canvas=cv2.convertScaleAbs(canvas)
     _, num_bytes = cv2.imencode('.jpeg',canvas)
     num_bytes = num_bytes.tobytes()
     fileObj = discord.File(io.BytesIO(num_bytes),filename="blank.png")
@@ -96,6 +97,7 @@ async def rect(ctx):
         (255,255,255),
         2
     )
+    canvas=cv2.convertScaleAbs(canvas)
     _, num_bytes = cv2.imencode('.jpeg',canvas)
     num_bytes = num_bytes.tobytes()
     fileObj = discord.File(io.BytesIO(num_bytes),filename="blank.png")
@@ -107,6 +109,7 @@ async def clear(ctx):
     """キャンバスを初期化して返す"""
     global canvas
     canvas=copy.deepcopy(blank)
+    canvas=cv2.convertScaleAbs(canvas)
     _, num_bytes = cv2.imencode('.jpeg',canvas)
     num_bytes = num_bytes.tobytes()
     fileObj = discord.File(io.BytesIO(num_bytes),filename="blank.png")
@@ -120,6 +123,7 @@ async def fill(ctx):
     point=(random.randint(1,width-1),random.randint(1,height-1))
     fillColor=(200,200,200)
     retval,canvas,mask,rect = cv2.floodFill(image=canvas, mask=fillMask, seedPoint=point, newVal=fillColor)
+    canvas=cv2.convertScaleAbs(canvas)
     _, num_bytes = cv2.imencode('.jpeg',canvas)
     num_bytes = num_bytes.tobytes()
     fileObj = discord.File(io.BytesIO(num_bytes),filename="blank.png")
