@@ -67,7 +67,7 @@ async def line(ctx):
     global height
     pointA=(random.randint(1,width-1),random.randint(1,height-1))
     pointB=(random.randint(1,width-1),random.randint(1,height-1))
-    lineColor=(random.randint(0,1)*255,random.randint(0,1)*255,random.randint(0,1)*255)
+    lineColor=(random.randint(0,1)*200+55,random.randint(0,1)*200+55,random.randint(0,1)*200+55)
     canvas=cv2.line(
         canvas,
         pointA,
@@ -121,7 +121,7 @@ async def fill(ctx):
     global canvas
     global fillMask
     point=(random.randint(1,width-1),random.randint(1,height-1))
-    fillColor=(200,200,200)
+    fillColor=(random.randint(0,1)*200+55,random.randint(0,1)*200+55,random.randint(0,1)*200+55)
     retval,canvas,mask,rect = cv2.floodFill(image=canvas, mask=fillMask, seedPoint=point, newVal=fillColor)
     canvas=cv2.convertScaleAbs(canvas)
     _, num_bytes = cv2.imencode('.jpeg',canvas)
