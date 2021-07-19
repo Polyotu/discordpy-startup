@@ -25,6 +25,16 @@ savedPictureName="EztakJ-VoAYSg9R.jpeg"
 # client = discord.Client(intents=intents)
 standbyLog=datetime.now()
 
+colorSet=[
+    (0,0,255),
+    (0,165,255),
+    (0,255,255),
+    (0,128,0),
+    (255,255,0),
+    (255,0,0),
+    (128,0,128)   
+]
+
 @bot.event
 async def on_command_error(ctx, error):
     orig_error = getattr(error, "original", error)
@@ -67,7 +77,7 @@ async def line(ctx):
     global height
     pointA=(random.randint(1,width-1),random.randint(1,height-1))
     pointB=(random.randint(1,width-1),random.randint(1,height-1))
-    lineColor=(random.randint(0,1)*200+55,random.randint(0,1)*200+55,random.randint(0,1)*200+55)
+    lineColor=colorSet[random.randint(0,6)]
     canvas=cv2.line(
         canvas,
         pointA,
@@ -90,11 +100,12 @@ async def rect(ctx):
     global height
     pointA=(random.randint(1,width-1),random.randint(1,height-1))
     pointB=(random.randint(1,width-1),random.randint(1,height-1))
+    rectColor=colorSet[random.randint(0,6)]
     canvas=cv2.rectangle(
         canvas,
         pointA,
         pointB,
-        (255,255,255),
+        rectColor,
         2
     )
     canvas=cv2.convertScaleAbs(canvas)
@@ -123,7 +134,7 @@ async def fill(ctx):
     global width
     global height
     point=(random.randint(1,width-1),random.randint(1,height-1))
-    fillColor=(random.randint(0,1)*200+55,random.randint(0,1)*200+55,random.randint(0,1)*200+55)
+    fillColor=colorSet[random.randint(0,6)]
     retval,canvas,mask,rect = cv2.floodFill(image=canvas, mask=fillMask, seedPoint=point, newVal=fillColor,flags=4)
     canvas=cv2.convertScaleAbs(canvas)
     _, num_bytes = cv2.imencode('.jpeg',canvas)
