@@ -19,30 +19,33 @@ canvas=np.zeros([width,height, 3])
 
 savedPictureName="EztakJ-VoAYSg9R.jpeg"
 
-@bot.event
+intents = discord.Intents.all()
+client = discord.Client(intents=intents)
+
+@client.event
 async def on_command_error(ctx, error):
     orig_error = getattr(error, "original", error)
     error_msg = ''.join(traceback.TracebackException.from_exception(orig_error).format())
     await ctx.send(error_msg)
 
-@bot.event
+@client.event
 async def on_ready():
-    garv = bot.get_channel(defaultChannel)
+    garv = client.get_channel(defaultChannel)
     log=str(datetime.now())
     await garv.send(log+"loggedin")
     
-@bot.command()
+@client.command()
 async def ping(ctx):
     """pongって応答するだけ"""
     await ctx.send('pong')
 
-@bot.command()
+@client.command()
 async def pic(ctx):
     """事前にディレクトリ内に保存されたほぼ真っ白画像を返す"""
     fileObj = discord.File(savedPictureName)
     await ctx.send(file=fileObj)
     
-@bot.command()
+@client.command()
 async def pic2(ctx):
     """現在のキャンバスの状態を返す，初期化済みの場合真っ黒"""
     global canvas
@@ -51,7 +54,7 @@ async def pic2(ctx):
     fileObj = discord.File(io.BytesIO(num_bytes),filename="blank.png")
     await ctx.send(file=fileObj)
     
-@bot.command()
+@client.command()
 async def line(ctx):
     """キャンバスにランダムな線を1本上書きして返す"""
     global canvas
@@ -73,7 +76,7 @@ async def line(ctx):
     await ctx.send("pointA:"+str(pointA)+" pointB:"+str(pointB))
     await ctx.send(file=fileObj)
     
-@bot.command()
+@client.command()
 async def rect(ctx):
     """キャンバスにランダムな直方体を1つ上書きして返す"""
     global canvas
@@ -94,7 +97,7 @@ async def rect(ctx):
     await ctx.send("pointA:"+str(pointA)+" pointB:"+str(pointB))
     await ctx.send(file=fileObj)
     
-@bot.command()
+@client.command()
 async def clear(ctx):
     """キャンバスを初期化して返す"""
     global canvas
@@ -105,4 +108,4 @@ async def clear(ctx):
     fileObj = discord.File(io.BytesIO(num_bytes),filename="blank.png")
     await ctx.send(file=fileObj)
 
-bot.run(token)
+client.run(token)
