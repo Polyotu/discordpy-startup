@@ -8,7 +8,7 @@ import io
 import random
 import copy
 
-bot = commands.Bot(command_prefix='%dip')
+bot = commands.Bot(command_prefix='##')
 token = os.environ['DISCORD_BOT_TOKEN']
 
 height=500
@@ -28,7 +28,7 @@ async def on_command_error(ctx, error):
 @bot.command()
 async def ping(ctx):
     """pongって応答するだけ"""
-    await ctx.send('pong')
+    await ctx.send('pong 13:15')
 
 @bot.command()
 async def pic(ctx):
