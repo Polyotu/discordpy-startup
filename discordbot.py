@@ -15,8 +15,8 @@ defaultChannel=os.environ['DISCORD_DEFAULT_CHANNEL']
 
 height=500
 width=500
-blank=np.zeros([width,height, 3])
-canvas=np.zeros([width,height, 3])
+blank=np.zeros([width,height, 3],np.uint8)
+canvas=np.zeros([width,height, 3],np.uint8)
 fillMask=np.zeros([width+2,height+2],np.uint8)
 
 savedPictureName="EztakJ-VoAYSg9R.jpeg"
