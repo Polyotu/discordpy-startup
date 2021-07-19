@@ -121,7 +121,7 @@ class MyCog(commands.Cog):
         "エーゲ海":{"attr":"sea","base":False,"destination":[]},
         "東地中海":{"attr":"sea","base":False,"destination":[]},
         "黒海":{"attr":"sea","base":False,"destination":[]},
-        "ノルウェー海":{"attr","base":False:"sea","destination":[]},
+        "ノルウェー海":{"attr":"sea","base":False,"destination":[]},
         "イギリス海峡":{"attr":"sea","base":False,"destination":[]},
         "北海":{"attr":"sea","base":False,"destination":[]},
         "ヘルゴランド湾":{"attr":"sea","base":False,"destination":[]},
@@ -243,6 +243,5 @@ class MyCog(commands.Cog):
 #             await ctx.send(file=fileObj)
     
 def setup(bot):
-#     return bot.add_cog(MyCog(bot))
-    bot.add_cog(MyCog(bot))
+    return bot.add_cog(MyCog(bot))
 
