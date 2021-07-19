@@ -139,109 +139,109 @@ class MyCog(commands.Cog):
 #         if ctx.invoked_subcommand is None:
         await ctx.send('pong'+str(self.standbyLog))
     
-    @commands.command()#group()
-    async def status(self,ctx):
-        """国の初期ステータスをランダムに返す"""
-#         if ctx.invoked_subcommand is None:
-        name,val=random.choice(list(self.country.items()))
-        await ctx.send(str(name)+":"+str(val))
+#     @commands.command()#group()
+#     async def status(self,ctx):
+#         """国の初期ステータスをランダムに返す"""
+# #         if ctx.invoked_subcommand is None:
+#         name,val=random.choice(list(self.country.items()))
+#         await ctx.send(str(name)+":"+str(val))
            
-    @commands.command()#group() 
-    async def pic(self,ctx):
-        """事前にディレクトリ内に保存されたほぼ真っ白画像を返す"""
-#         if ctx.invoked_subcommand is None:
-        fileObj = discord.File(self.savedPictureName)
-        await ctx.send(file=fileObj)
+#     @commands.command()#group() 
+#     async def pic(self,ctx):
+#         """事前にディレクトリ内に保存されたほぼ真っ白画像を返す"""
+# #         if ctx.invoked_subcommand is None:
+#         fileObj = discord.File(self.savedPictureName)
+#         await ctx.send(file=fileObj)
                
-    @commands.command()#group() 
-    async def pic2(self,ctx):
-        """現在のキャンバスの状態を返す，初期化済みの場合真っ黒"""
-#         if ctx.invoked_subcommand is None:
-#         global canvas
-        _, num_bytes = cv2.imencode('.jpeg', self.canvas)
-        num_bytes = num_bytes.tobytes()
-        fileObj = discord.File(io.BytesIO(num_bytes),filename="blank.png")
-        await ctx.send(file=fileObj)
+#     @commands.command()#group() 
+#     async def pic2(self,ctx):
+#         """現在のキャンバスの状態を返す，初期化済みの場合真っ黒"""
+# #         if ctx.invoked_subcommand is None:
+# #         global canvas
+#         _, num_bytes = cv2.imencode('.jpeg', self.canvas)
+#         num_bytes = num_bytes.tobytes()
+#         fileObj = discord.File(io.BytesIO(num_bytes),filename="blank.png")
+#         await ctx.send(file=fileObj)
 
-    @commands.command()#group() 
-    async def line(self,ctx):
-        """キャンバスにランダムな線を1本上書きして返す"""
-#         if ctx.invoked_subcommand is None:
-#             global canvas
-#             global width
-#             global height
-        pointA=(random.randint(1,self.width-1),random.randint(1,self.height-1))
-        pointB=(random.randint(1,self.width-1),random.randint(1,self.height-1))
-        lineColor=self.colorSet[random.randint(0,6)]
-        self.canvas=cv2.line(
-            self.canvas,
-            pointA,
-            pointB,
-            lineColor,
-            2
-        )
-        self.canvas=cv2.convertScaleAbs(self.canvas)
-        _, num_bytes = cv2.imencode('.jpeg',self.canvas)
-        num_bytes = num_bytes.tobytes()
-        fileObj = discord.File(io.BytesIO(num_bytes),filename="blank.png")
-        await ctx.send("pointA:"+str(pointA)+" pointB:"+str(pointB))
-        await ctx.send(file=fileObj)
+#     @commands.command()#group() 
+#     async def line(self,ctx):
+#         """キャンバスにランダムな線を1本上書きして返す"""
+# #         if ctx.invoked_subcommand is None:
+# #             global canvas
+# #             global width
+# #             global height
+#         pointA=(random.randint(1,self.width-1),random.randint(1,self.height-1))
+#         pointB=(random.randint(1,self.width-1),random.randint(1,self.height-1))
+#         lineColor=self.colorSet[random.randint(0,6)]
+#         self.canvas=cv2.line(
+#             self.canvas,
+#             pointA,
+#             pointB,
+#             lineColor,
+#             2
+#         )
+#         self.canvas=cv2.convertScaleAbs(self.canvas)
+#         _, num_bytes = cv2.imencode('.jpeg',self.canvas)
+#         num_bytes = num_bytes.tobytes()
+#         fileObj = discord.File(io.BytesIO(num_bytes),filename="blank.png")
+#         await ctx.send("pointA:"+str(pointA)+" pointB:"+str(pointB))
+#         await ctx.send(file=fileObj)
             
-    @commands.command()#group() 
-    async def rect(self,ctx):
-    """キャンバスにランダムな直方体を1つ上書きして返す"""
-#         if ctx.invoked_subcommand is None:
-#             global canvas
-#             global width
-#             global height
-        pointA=(random.randint(1,self.width-1),random.randint(1,self.height-1))
-        pointB=(random.randint(1,self.width-1),random.randint(1,self.height-1))
-        rectColor=self.colorSet[random.randint(0,6)]
-        self.canvas=cv2.rectangle(
-            self.canvas,
-            pointA,
-            pointB,
-            rectColor,
-            2
-        )
-        self.canvas=cv2.convertScaleAbs(self.canvas)
-        _, num_bytes = cv2.imencode('.jpeg',self.canvas)
-        num_bytes = num_bytes.tobytes()
-        fileObj = discord.File(io.BytesIO(num_bytes),filename="blank.png")
-        await ctx.send("pointA:"+str(pointA)+" pointB:"+str(pointB))
-        await ctx.send(file=fileObj)
+#     @commands.command()#group() 
+#     async def rect(self,ctx):
+#     """キャンバスにランダムな直方体を1つ上書きして返す"""
+# #         if ctx.invoked_subcommand is None:
+# #             global canvas
+# #             global width
+# #             global height
+#         pointA=(random.randint(1,self.width-1),random.randint(1,self.height-1))
+#         pointB=(random.randint(1,self.width-1),random.randint(1,self.height-1))
+#         rectColor=self.colorSet[random.randint(0,6)]
+#         self.canvas=cv2.rectangle(
+#             self.canvas,
+#             pointA,
+#             pointB,
+#             rectColor,
+#             2
+#         )
+#         self.canvas=cv2.convertScaleAbs(self.canvas)
+#         _, num_bytes = cv2.imencode('.jpeg',self.canvas)
+#         num_bytes = num_bytes.tobytes()
+#         fileObj = discord.File(io.BytesIO(num_bytes),filename="blank.png")
+#         await ctx.send("pointA:"+str(pointA)+" pointB:"+str(pointB))
+#         await ctx.send(file=fileObj)
             
-    @commands.command()#group() 
-    async def fill(self,ctx):
-    """ランダムな点を起点に塗りつぶし"""
-#         if ctx.invoked_subcommand is None:
-#             global canvas
-#             global fillMask
-#             global width
-#             global height
-        point=(random.randint(1,self.width-1),random.randint(1,self.height-1))
-        fillColor=self.colorSet[random.randint(0,6)]
-        retval,self.canvas,mask,rect = cv2.floodFill(image=self.canvas, mask=self.fillMask, seedPoint=point, newVal=fillColor,flags=4)
-        self.canvas=cv2.convertScaleAbs(self.canvas)
-        _, num_bytes = cv2.imencode('.jpeg',self.canvas)
-        num_bytes = num_bytes.tobytes()
-        fileObj = discord.File(io.BytesIO(num_bytes),filename="blank.png")
-        await ctx.send("point:"+str(point))
-        await ctx.send(file=fileObj)
-        self.fillMask=np.zeros([self.width+2,self.height+2],np.uint8)
+#     @commands.command()#group() 
+#     async def fill(self,ctx):
+#     """ランダムな点を起点に塗りつぶし"""
+# #         if ctx.invoked_subcommand is None:
+# #             global canvas
+# #             global fillMask
+# #             global width
+# #             global height
+#         point=(random.randint(1,self.width-1),random.randint(1,self.height-1))
+#         fillColor=self.colorSet[random.randint(0,6)]
+#         retval,self.canvas,mask,rect = cv2.floodFill(image=self.canvas, mask=self.fillMask, seedPoint=point, newVal=fillColor,flags=4)
+#         self.canvas=cv2.convertScaleAbs(self.canvas)
+#         _, num_bytes = cv2.imencode('.jpeg',self.canvas)
+#         num_bytes = num_bytes.tobytes()
+#         fileObj = discord.File(io.BytesIO(num_bytes),filename="blank.png")
+#         await ctx.send("point:"+str(point))
+#         await ctx.send(file=fileObj)
+#         self.fillMask=np.zeros([self.width+2,self.height+2],np.uint8)
     
-    @commands.command()#group() 
-    async def clear(self,ctx):
-    """キャンバスを初期化して返す"""
-#         if ctx.invoked_subcommand is None:
-#             global canvas
-        self.canvas=copy.deepcopy(self.blank)
-        self.canvas=cv2.convertScaleAbs(self.canvas)
-        _, num_bytes = cv2.imencode('.jpeg',self.canvas)
-        num_bytes = num_bytes.tobytes()
-        fileObj = discord.File(io.BytesIO(num_bytes),filename="blank.png")
-        await ctx.send(file=fileObj)
-    
+#     @commands.command()#group() 
+#     async def clear(self,ctx):
+#     """キャンバスを初期化して返す"""
+# #         if ctx.invoked_subcommand is None:
+# #             global canvas
+#         self.canvas=copy.deepcopy(self.blank)
+#         self.canvas=cv2.convertScaleAbs(self.canvas)
+#         _, num_bytes = cv2.imencode('.jpeg',self.canvas)
+#         num_bytes = num_bytes.tobytes()
+#         fileObj = discord.File(io.BytesIO(num_bytes),filename="blank.png")
+#         await ctx.send(file=fileObj)
+        
 def setup(bot):
     return bot.add_cog(MyCog(bot))
 
