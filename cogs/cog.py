@@ -154,7 +154,7 @@ class MyCog(commands.Cog):
 #         await ctx.send(file=fileObj)
 
     @commands.command()#group() 
-    async def clearCanvas(self,ctx):
+    async def clear(self,ctx):
         """キャンバスを初期化して返す"""
 #         if ctx.invoked_subcommand is None:
 #             global canvas
