@@ -154,12 +154,12 @@ class MyCog(commands.Cog):
 #         if ctx.invoked_subcommand is None:
 #         fileObj = discord.File(self.savedPictureName)
         resp= requests.get("https://cdn.discordapp.com/attachments/866874154297196594/866874172965257236/image1.png", stream=True).raw
-        image= np.asarray(bytearray(resp.read()), dtype="uint8")
-        image= cv2.imdecode(image, cv2.IMREAD_COLOR)
-        _, num_bytes = cv2.imencode('.jpeg',imread_web(image))
-        num_bytes = num_bytes.tobytes()
-        fileObj = discord.File(io.BytesIO(num_bytes),filename="blank.png")
-        await ctx.send(file=fileObj)
+#         image= np.asarray(bytearray(resp.read()), dtype="uint8")
+#         image= cv2.imdecode(image, cv2.IMREAD_COLOR)
+#         _, num_bytes = cv2.imencode('.jpeg',imread_web(image))
+#         num_bytes = num_bytes.tobytes()
+#         fileObj = discord.File(io.BytesIO(num_bytes),filename="blank.png")
+#         await ctx.send(file=fileObj)
 
     @commands.command()#group() 
     async def clear(self,ctx):
