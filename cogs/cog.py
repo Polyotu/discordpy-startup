@@ -9,6 +9,8 @@ import random
 import copy
 from datetime import datetime
 import asyncio
+import tempfile
+import requests
 
 
 class MyCog(commands.Cog):
@@ -17,7 +19,7 @@ class MyCog(commands.Cog):
     blank=np.zeros([width,height, 3],np.uint8)
     canvas=np.zeros([width,height, 3],np.uint8)
     fillMask=np.zeros([width+2,height+2],np.uint8)
-    savedPictureName="EztakJ-VoAYSg9R.jpeg"
+#     savedPictureName="EztakJ-VoAYSg9R.jpeg"
     standbyLog=datetime.now()
     colorSet=[
         (0,0,255),
@@ -134,6 +136,17 @@ class MyCog(commands.Cog):
         self.bot=bot
         #self.bot.remove_command("help")
         
+    def imread_web(url):
+        # 画像をリクエストする
+        res = requests.get(url)
+        img = None
+        # Tempfileを作成して即読み込む
+        with tempfile.NamedTemporaryFile(dir='./') as fp:
+            fp.write(res.content)
+            fp.file.seek(0)
+            img = cv2.imread(fp.name)
+        return img
+        
     @commands.command()#group()
     async def ping(self,ctx):
 #         if ctx.invoked_subcommand is None:
@@ -146,12 +159,15 @@ class MyCog(commands.Cog):
         name,val=random.choice(list(self.country.items()))
         await ctx.send(str(name)+":"+str(val))
            
-#     @commands.command()#group() 
-#     async def pic(self,ctx):
-#         """事前にディレクトリ内に保存されたほぼ真っ白画像を返す"""
-# #         if ctx.invoked_subcommand is None:
+    @commands.command()#group() 
+    async def pic(self,ctx):
+        """無地地図チャット欄の画像を返せるかテスト"""
+#         if ctx.invoked_subcommand is None:
 #         fileObj = discord.File(self.savedPictureName)
-#         await ctx.send(file=fileObj)
+        _, num_bytes = cv2.imencode('.jpeg',imread_web("https://cdn.discordapp.com/attachments/866874154297196594/866874172965257236/image1.png"))
+        num_bytes = num_bytes.tobytes()
+        fileObj = discord.File(io.BytesIO(num_bytes),filename="blank.png")
+        await ctx.send(file=fileObj)
 
     @commands.command()#group() 
     async def clear(self,ctx):
