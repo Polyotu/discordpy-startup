@@ -153,7 +153,10 @@ class MyCog(commands.Cog):
         """無地地図チャット欄の画像を返せるかテスト"""
 #         if ctx.invoked_subcommand is None:
 #         fileObj = discord.File(self.savedPictureName)
-        _, num_bytes = cv2.imencode('.jpeg',imread_web("https://cdn.discordapp.com/attachments/866874154297196594/866874172965257236/image1.png"))
+        resp= requests.get("https://cdn.discordapp.com/attachments/866874154297196594/866874172965257236/image1.png", stream=True).raw
+        image= np.asarray(bytearray(resp.read()), dtype="uint8")
+        image= cv2.imdecode(image, cv2.IMREAD_COLOR)
+        _, num_bytes = cv2.imencode('.jpeg',imread_web(image))
         num_bytes = num_bytes.tobytes()
         fileObj = discord.File(io.BytesIO(num_bytes),filename="blank.png")
         await ctx.send(file=fileObj)
@@ -248,15 +251,15 @@ class MyCog(commands.Cog):
         self.fillMask=np.zeros([self.width+2,self.height+2],np.uint8)
 
     
-def imread_web(url):
-    # 画像をリクエストする
-    res = requests.get(url)
-    img = None
-    # Tempfileを作成して即読み込む
-    with tempfile.NamedTemporaryFile(dir='./') as fp:
-        fp.write(res.content)
-        fp.file.seek(0)
-        img = cv2.imread(fp.name)
+# def imread_web(url):
+#     # 画像をリクエストする
+#     res = requests.get(url)
+#     img = None
+#     # Tempfileを作成して即読み込む
+#     with tempfile.NamedTemporaryFile(dir='./') as fp:
+#         fp.write(res.content)
+#         fp.file.seek(0)
+#         img = cv2.imread(fp.name)
     return img
 
 def setup(bot):
