@@ -136,17 +136,6 @@ class MyCog(commands.Cog):
         self.bot=bot
         #self.bot.remove_command("help")
         
-    def imread_web(self,url):
-        # 画像をリクエストする
-        res = requests.get(url)
-        img = None
-        # Tempfileを作成して即読み込む
-        with tempfile.NamedTemporaryFile(dir='./') as fp:
-            fp.write(res.content)
-            fp.file.seek(0)
-            img = cv2.imread(fp.name)
-        return img
-        
     @commands.command()#group()
     async def ping(self,ctx):
 #         if ctx.invoked_subcommand is None:
@@ -259,7 +248,17 @@ class MyCog(commands.Cog):
         self.fillMask=np.zeros([self.width+2,self.height+2],np.uint8)
 
     
-        
+def imread_web(url):
+    # 画像をリクエストする
+    res = requests.get(url)
+    img = None
+    # Tempfileを作成して即読み込む
+    with tempfile.NamedTemporaryFile(dir='./') as fp:
+        fp.write(res.content)
+        fp.file.seek(0)
+        img = cv2.imread(fp.name)
+    return img
+
 def setup(bot):
     return bot.add_cog(MyCog(bot))
 
