@@ -9,8 +9,8 @@ import random
 import copy
 from datetime import datetime
 import asyncio
-import tempfile
-import requests
+# import tempfile
+# import requests
 
 
 class MyCog(commands.Cog):
