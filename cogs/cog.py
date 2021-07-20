@@ -148,8 +148,8 @@ class MyCog(commands.Cog):
         name,val=random.choice(list(self.country.items()))
         await ctx.send(str(name)+":"+str(val))
            
-    @commands.command()#group() 
-    async def pic(self,ctx):
+#     @commands.command()#group() 
+#     async def pic(self,ctx):
         
 #         """無地地図チャット欄の画像を返せるかテスト"""
 #         if ctx.invoked_subcommand is None:
