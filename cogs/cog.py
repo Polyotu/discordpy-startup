@@ -9,8 +9,6 @@ import random
 import copy
 from datetime import datetime
 import asyncio
-# import tempfile
-# import requests
 
 
 class MyCog(commands.Cog):
@@ -18,6 +16,7 @@ class MyCog(commands.Cog):
     width=512
     blank=np.zeros([width,height, 3],np.uint8)
     canvas=np.zeros([width,height, 3],np.uint8)
+    fieldMap=np.zeros([width,height, 3],np.uint8)
     fillMask=np.zeros([width+2,height+2],np.uint8)
 #     savedPictureName="EztakJ-VoAYSg9R.jpeg"
     standbyLog=datetime.now()
@@ -37,103 +36,112 @@ class MyCog(commands.Cog):
     #forceは各要素が各兵力の辞書になっている
     #各兵力の辞書には，属性attr，所在地reegionがある
     country={
-        "イギリス":{"player":None,"force":[{"attr":"army","region":"リヴァプール"},{"attr":"navy","region":"エディンバラ"},{"attr":"navy","region":"ロンドン"}]},
-        "ドイツ":{"player":None,"force":[{"attr":"army","region":"ベルリン"},{"attr":"army","region":"ミュンヘン"},{"attr":"navy","region":"キール"}]},
-        "ロシア":{"player":None,"force":[{"attr":"army","region":"モスクワ"},{"attr":"army","region":"ワルシャワ"},{"attr":"navy","region":"セヴァストポリ"},{"attr":"navy","region":"サンクトペテルブルク南岸"}]},
-        "オスマン・トルコ":{"player":None,"force":[{"attr":"army","region":"コンスタンティノープル"},{"attr":"army","region":"スミルナ"},{"attr":"navy","region":"アンカラ"}]},
-        "オーストリア・ハンガリー":{"player":None,"force":[{"attr":"army","region":"ウィーン"},{"attr":"army","region":"ブダペスト"},{"attr":"navy","region":"トリエステ"}]},
-        "イタリア":{"player":None,"force":[{"attr":"army","region":"ローマ"},{"attr":"army","region":"ヴェニス"},{"attr":"navy","region":"ナポリ"}]},
-        "フランス":{"player":None,"force":[{"attr":"army","region":"パリ"},{"attr":"army","region":"マルセイユ"},{"attr":"navy","region":"ブレスト"}]}
+        "イギリス":{"player":None,"force":[{"attr":"army","region":"リヴァプール"},{"attr":"fleet","region":"エディンバラ"},{"attr":"fleet","region":"ロンドン"}]},
+        "ドイツ":{"player":None,"force":[{"attr":"army","region":"ベルリン"},{"attr":"army","region":"ミュンヘン"},{"attr":"fleet","region":"キール"}]},
+        "ロシア":{"player":None,"force":[{"attr":"army","region":"モスクワ"},{"attr":"army","region":"ワルシャワ"},{"attr":"fleet","region":"セヴァストポリ"},{"attr":"fleet","region":"サンクトペテルブルク南岸"}]},
+        "オスマン・トルコ":{"player":None,"force":[{"attr":"army","region":"コンスタンティノープル"},{"attr":"army","region":"スミルナ"},{"attr":"fleet","region":"アンカラ"}]},
+        "オーストリア・ハンガリー":{"player":None,"force":[{"attr":"army","region":"ウィーン"},{"attr":"army","region":"ブダペスト"},{"attr":"fleet","region":"トリエステ"}]},
+        "イタリア":{"player":None,"force":[{"attr":"army","region":"ローマ"},{"attr":"army","region":"ヴェニス"},{"attr":"fleet","region":"ナポリ"}]},
+        "フランス":{"player":None,"force":[{"attr":"army","region":"パリ"},{"attr":"army","region":"マルセイユ"},{"attr":"fleet","region":"ブレスト"}]}
     }
     
     #地域の辞書
     #一つの地域は一つ辞書をもつ
-    #地域の持っている辞書には，属性(陸か海か)attr,拠点の有無base,移動可能地域のリストdestinationがある
+    #地域の持っている辞書には，属性(陸か海か)attr,拠点の有無base,移動可能地域のリストarmyDestination,fleetDestintionがある
+    #また，2つの海岸に分かれている地域については
+    #1.地名：陸路のみ記載
+    #2.地名+岸A:岸Aから出る海路のみ記載
+    #海側のarmyDestinationについては，岸が2か所に分かれているもののみ，Carry処理のために地域名を記載
+    #それ以外は空とする
     region={
-        "アルバニア":{"attr":"land","base":False,"destination":["ギリシャ","セルビア","トリエステ","アドリア海","イオニア海"]},
-        "アンカラ":{"attr":"land","base":True,"destination":["アルメニア","黒海","コンスタンティノープル","スミルナ"]},#1
-        "アヴュリア":{"attr":"land","base":False,"destination":["アドリア海","イオニア海","ヴェニス","ローマ","ナポリ"]},
-        "アルメニア":{"attr":"land","base":False,"destination":["セヴァストポリ","黒海","アンカラ","スミルナ","シリア"]},
-        "ベルギー":{"attr":"land","base":True,"destination":["オランダ","ルール","ブルゴーニュ","ピカルディ","イギリス海峡","北海"]},#2
-        "ベルリン":{"attr":"land","base":True,"destination":["プロシア","シレジア","ミュンヘン","キール","バルト海"]},#3
-        "ボヘミア":{"attr":"land","base":False,"destination":["ガリシア","シレジア","ミュンヘン","チロル","ウィーン"]},
-        "ブレスト":{"attr":"land","base":True,"destination":["ピカルディ","パリ","ガスコーニュ","中大西洋","イギリス海峡"]},#4
-        "ブダペスト":{"attr":"land","base":True,"destination":["ルーマニア","ガリシア","ウィーン","トリエステ","セルビア"]},#5
-        "ブルガリア":{"attr":"land","base":True,"destination":[]},#6
-        "ブルガリア東岸":{"attr":"land","base":True,"destination":[]},#6
-        "ブルガリア南岸":{"attr":"land","base":True,"destination":[]},#6
-        "ブルゴーニュ":{"attr":"land","base":False,"destination":[]},
-        "クライド":{"attr":"land","base":False,"destination":[]},
-        "コンスタンティノープル":{"attr":"land","base":True,"destination":[]},#7
-        "デンマーク":{"attr":"land","base":True,"destination":[]},#8
-        "エディンバラ":{"attr":"land","base":True,"destination":[]},
-        "フィンランド":{"attr":"land","base":False,"destination":[]},
-        "ガリシア":{"attr":"land","base":False,"destination":[]},
-        "ガスコーニュ":{"attr":"land","base":False,"destination":[]},
-        "ギリシャ":{"attr":"land","base":True,"destination":[]},#9
-        "オランダ":{"attr":"land","base":True,"destination":[]},#10
-        "キール":{"attr":"land","base":True,"destination":[]},#11
-        "リヴォニア":{"attr":"land","base":False,"destination":[]},
-        "ロンドン":{"attr":"land","base":True,"destination":[]},#12
-        "リヴァプール":{"attr":"land","base":True,"destination":[]},#13
-        "マルセイユ":{"attr":"land","base":True,"destination":[]},#14
-        "モスクワ":{"attr":"land","base":True,"destination":[]},#15
-        "ミュンヘン":{"attr":"land","base":True,"destination":[]},#16
-        "北アフリカ":{"attr":"land","base":False,"destination":[]},
-        "ナポリ":{"attr":"land","base":True,"destination":[]},
-        "ノルウェー":{"attr":"land","base":True,"destination":[]},#17
-        "パリ":{"attr":"land","base":True,"destination":[]},#18
-        "ピカルディ":{"attr":"land","base":False,"destination":[]},
-        "ピエモント":{"attr":"land","base":False,"destination":[]},
-        "ポルトガル":{"attr":"land","base":True,"destination":[]},#19
-        "プロシア":{"attr":"land","base":False,"destination":[]},
-        "ローマ":{"attr":"land","base":True,"destination":[]},#20
-        "ルール":{"attr":"land","base":False,"destination":[]},
-        "ルーマニア":{"attr":"land","base":True,"destination":[]},#21
-        "セルビア":{"attr":"land","base":True,"destination":[]},#22
-        "セヴァストポリ":{"attr":"land","base":True,"destination":[]},#23
-        "シレジア":{"attr":"land","base":False,"destination":[]},
-        "スミルナ":{"attr":"land","base":True,"destination":[]},#24
-        "スペイン":{"attr":"land","base":True,"destination":[]},#25
-        "スペイン":{"attr":"land","base":True,"destination":[]},#25
-        "スペイン":{"attr":"land","base":True,"destination":[]},#25
-        "サンクトペテルブルク":{"attr":"land","base":True,"destination":[]},#26
-        "サンクトペテルブルク":{"attr":"land","base":True,"destination":[]},#26
-        "サンクトペテルブルク":{"attr":"land","base":True,"destination":[]},#26
-        "スウェーデン":{"attr":"land","base":True,"destination":[]},#27
-        "シリア":{"attr":"land","base":False,"destination":[]},
-        "トリエステ":{"attr":"land","base":True,"destination":[]},#28
-        "チュニス":{"attr":"land","base":True,"destination":[]},#29
-        "トスカーナ":{"attr":"land","base":False,"destination":[]},
-        "チロル":{"attr":"land","base":False,"destination":[]},
-        "ウクライナ":{"attr":"land","base":False,"destination":[]},
-        "ヴェニス":{"attr":"land","base":True,"destination":[]},#30
-        "ウィーン":{"attr":"land","base":True,"destination":[]},#31
-        "ウェールズ":{"attr":"land","base":False,"destination":[]},
-        "ワルシャワ":{"attr":"land","base":True,"destination":[]},#32
-        "ヨークシャー":{"attr":"land","base":False,"destination":[]},
-        "北大西洋":{"attr":"sea","base":False,"destination":[]},
-        "アイリッシュ海":{"attr":"sea","base":False,"destination":[]},
-        "中大西洋":{"attr":"sea","base":False,"destination":[]},
-        "西地中海":{"attr":"sea","base":False,"destination":[]},
-        "リヨン湾":{"attr":"sea","base":False,"destination":[]},
-        "ティレニア海":{"attr":"sea","base":False,"destination":[]},
-        "イオニア海":{"attr":"sea","base":False,"destination":[]},
-        "アドリア海":{"attr":"sea","base":False,"destination":[]},
-        "エーゲ海":{"attr":"sea","base":False,"destination":[]},
-        "東地中海":{"attr":"sea","base":False,"destination":[]},
-        "黒海":{"attr":"sea","base":False,"destination":[]},
-        "ノルウェー海":{"attr":"sea","base":False,"destination":[]},
-        "イギリス海峡":{"attr":"sea","base":False,"destination":[]},
-        "北海":{"attr":"sea","base":False,"destination":[]},
-        "ヘルゴランド湾":{"attr":"sea","base":False,"destination":[]},
-        "スカゲラク":{"attr":"sea","base":False,"destination":[]},
-        "バルト海":{"attr":"sea","base":False,"destination":[]},
-        "ボスニア海":{"attr":"sea","base":False,"destination":[]},
-        "西地中海":{"attr":"sea","base":False,"destination":[]}
+        "アルバニア":{"attr":"land","base":False,"armyDestination":["ギリシャ","セルビア","トリエステ"],"fleetDestination":["アドリア海","イオニア海","ギリシャ","トリエステ"]},
+        "アンカラ":{"attr":"land","base":True,"armyDestination":["アルメニア","コンスタンティノープル","スミルナ"],"fleetDestination":["黒海","アルメニア","コンスタンティノープル"]},#1
+        "アヴュリア":{"attr":"land","base":False,"armyDestination":["ヴェニス","ローマ","ナポリ"],"fleetDestination":["アドリア海","イオニア海","ヴェニス","ナポリ"]},
+        "アルメニア":{"attr":"land","base":False,"armyDestination":["セヴァストポリ","アンカラ","スミルナ","シリア"],"fleetDestination":["セヴァストポリ","アンカラ","黒海"]},
+        "ベルギー":{"attr":"land","base":True,"armyDestination":["オランダ","ルール","ブルゴーニュ","ピカルディ"],"fleetDestination":["オランダ","ピカルディ","イギリス海峡","北海"]},#2
+        "ベルリン":{"attr":"land","base":True,"armyDestination":["プロシア","シレジア","ミュンヘン","キール"],"fleetDestination":["プロシア","キール","バルト海"]},#3
+        "ボヘミア":{"attr":"land","base":False,"armyDestination":["ガリシア","シレジア","ミュンヘン","チロル","ウィーン"],"fleetDestination":[]},
+        "ブレスト":{"attr":"land","base":True,"armyDestination":["ピカルディ","パリ","ガスコーニュ"],"fleetDestination":["ピカルディ","ガスコーニュ","中大西洋","イギリス海峡"]},#4
+        "ブダペスト":{"attr":"land","base":True,"armyDestination":["ルーマニア","ガリシア","ウィーン","トリエステ","セルビア"],"fleetDestination":[]},#5
+        "ブルガリア":{"attr":"land","base":True,"armyDestination":["ルーマニア","セルビア","ギリシャ","コンスタンティノープル"],"fleetDestination":[]},#6
+        "ブルガリア東岸":{"attr":"land","base":True,"armyDestination":[],"fleetDestination":["ルーマニア","コンスタンティノープル","黒海"]},#6
+        "ブルガリア南岸":{"attr":"land","base":True,"armyDestination":[],"fleetDestination":["エーゲ海","コンスタンティノープル","ギリシャ"]},#6
+        "ブルゴーニュ":{"attr":"land","base":False,"armyDestination":["ミュンヘン","ルール","ベルギー","ピカルディ","パリ","ガスコーニュ","マルセイユ"],"fleetDestination":[]},
+        "クライド":{"attr":"land","base":False,"armyDestination":["エディンバラ","リヴァプール"],"fleetDestination":["エディンバラ","リヴァプール","北大西洋","ノルウェー海"]},
+        "コンスタンティノープル":{"attr":"land","base":True,"armyDestination":["アンカラ","スミルナ","ブルガリア"],"fleetDestination":["アンカラ","スミルナ","ブルガリア東岸","ブルガリア南岸","黒海","エーゲ海"]},#7
+        "デンマーク":{"attr":"land","base":True,"armyDestination":[],"fleetDestination":[]},#8
+        "エディンバラ":{"attr":"land","base":True,"armyDestination":["クライド","リヴァプール","ヨークシャー"],"fleetDestination":["クライド","ヨークシャー","北海","ノルウェー海"]},
+        "フィンランド":{"attr":"land","base":False,"armyDestination":["サンクトペテルブルク","スウェーデン","ノルウェー"],"fleetDestination":["ボスニア海","サンクトペテルブルク南岸","スウェーデン"]},
+        "ガリシア":{"attr":"land","base":False,"armyDestination":["ウクライナ","ワルシャワ","シレジア","ボヘミア","ウィーン","ブダペスト","ルーマニア"],"fleetDestination":[]},
+        "ガスコーニュ":{"attr":"land","base":False,"armyDestination":["ブレスト","パリ","ブルゴーニュ","マルセイユ","スペイン"],"fleetDestination":["中大西洋","ブレスト","スペイン北岸"]},
+        "ギリシャ":{"attr":"land","base":True,"armyDestination":["アルバニア","セルビア","ブルガリア"],"fleetDestination":["イオニア海","エーゲ海","アルバニア","ブルガリア南岸"]},#9
+        "オランダ":{"attr":"land","base":True,"armyDestination":["キール","ルール","ベルギー"],"fleetDestination":["ヘルゴランド湾","北海","キール","ベルギー"]},#10
+        "キール":{"attr":"land","base":True,"armyDestination":["ベルリン","ミュンヘン","ルール","オランダ"],"fleetDestination":["バルト海","ヘルゴランド湾","ベルリン","オランダ"]},#11
+        "リヴォニア":{"attr":"land","base":False,"armyDestination":["サンクトペテルブルク","モスクワ","ワルシャワ","プロシア"],"fleetDestination":["ボスニア海","バルト海","サンクトペテルブルク南岸","プロシア"]},
+        "ロンドン":{"attr":"land","base":True,"armyDestination":["ヨークシャー","ウェールズ"],"fleetDestination":["北海","イギリス海峡","ヨークシャー","ウェールズ"]},#12
+        "リヴァプール":{"attr":"land","base":True,"armyDestination":["クライド","エディンバラ","ヨークシャー","ウェールズ"],"fleetDestination":["北大西洋","アイリッシュ海","ウェールズ","クライド"]},#13
+        "マルセイユ":{"attr":"land","base":True,"armyDestination":["ピエモント","ブルゴーニュ","ガスコーニュ","スペイン"],"fleetDestination":["リヨン湾","ピエモント","スペイン南岸"]},#14
+        "モスクワ":{"attr":"land","base":True,"armyDestination":["サンクトペテルブルク","リヴォニア","ワルシャワ","ウクライナ","セヴァストポリ"],"fleetDestination":[]},#15
+        "ミュンヘン":{"attr":"land","base":True,"armyDestination":["ボヘミア","シレジア","ベルリン","キール","ルール","ブルゴーニュ","チロル"],"fleetDestination":[]},#16
+        "北アフリカ":{"attr":"land","base":False,"armyDestination":["チュニス"],"fleetDestination":["西地中海","中大西洋","チュニス"]},
+        "ナポリ":{"attr":"land","base":True,"armyDestination":["アヴュリア","ローマ"],"fleetDestination":["ティレニア海","イオニア海","アヴュリア","ローマ"]},
+        "ノルウェー":{"attr":"land","base":True,"armyDestination":["スウェーデン","フィンランド","サンクトペテルブルク"],"fleetDestination":["北海","スカゲラク","ノルウェー海","バレンツ海","スウェーデン","サンクトペテルブルク北岸"]},#17
+        "パリ":{"attr":"land","base":True,"armyDestination":["ピカルディ","ブルゴーニュ","ガスコーニュ","ブレスト"],"fleetDestination":[]},#18
+        "ピカルディ":{"attr":"land","base":False,"armyDestination":["ベルギー","ブルゴーニュ","パリ","ブレスト"],"fleetDestination":["イギリス海峡","ベルギー","ブレスト"]},
+        "ピエモント":{"attr":"land","base":False,"armyDestination":["チロル","ヴェニス","トスカーナ","マルセイユ"],"fleetDestination":["リヨン湾","トスカーナ","マルセイユ"]},
+        "ポルトガル":{"attr":"land","base":True,"armyDestination":["スペイン"],"fleetDestination":["中大西洋","スペイン南岸","スペイン北岸"]},#19
+        "プロシア":{"attr":"land","base":False,"armyDestination":["リヴォニア","ワルシャワ","シレジア","ベルリン"],"fleetDestination":["バルト海","リヴォニア","ベルリン"]},
+        "ローマ":{"attr":"land","base":True,"armyDestination":["トスカーナ","ヴェニス","アヴュリア","ナポリ"],"fleetDestination":["ティレニア海","トスカーナ","ナポリ"]},#20
+        "ルール":{"attr":"land","base":False,"armyDestination":["キール","ミュンヘン","オランダ","ベルギー","ブルゴーニュ"],"fleetDestination":[]},
+        "ルーマニア":{"attr":"land","base":True,"armyDestination":["セヴァストポリ","ウクライナ","ガリシア","ブダペスト","セルビア","ブルガリア"],"fleetDestination":["黒海","セヴァストポリ","ブルガリア東岸"]},#21
+        "セルビア":{"attr":"land","base":True,"armyDestination":["ブルガリア","ルーマニア","ブダペスト","トリエステ","アルバニア","ギリシャ"],"fleetDestination":[]},#22
+        "セヴァストポリ":{"attr":"land","base":True,"armyDestination":["モスクワ","ウクライナ","ルーマニア","アルメニア"],"fleetDestination":["黒海","ルーマニア","アルメニア"]},#23
+        "シレジア":{"attr":"land","base":False,"armyDestination":["ワルシャワ","プロシア","ベルリン","ミュンヘン","ボヘミア","ガリシア"],"fleetDestination":[]},
+        "スミルナ":{"attr":"land","base":True,"armyDestination":["コンスタンティノープル","アンカラ","アルメニア","シリア"],"fleetDestination":["東地中海","エーゲ海","コンスタンティノープル","シリア"]},#24
+        "スペイン":{"attr":"land","base":True,"armyDestination":["ポルトガル","ガスコーニュ","マルセイユ"],"fleetDestination":[]},#25
+        "スペイン北岸":{"attr":"land","base":True,"armyDestination":[],"fleetDestination":["中大西洋","ガスコーニュ","ポルトガル"]},#25
+        "スペイン南岸":{"attr":"land","base":True,"armyDestination":[],"fleetDestination":[]},#25
+        "サンクトペテルブルク":{"attr":"land","base":True,"armyDestination":["ノルウェー","フィンランド","リヴォニア","モスクワ"],"fleetDestination":[]},#26
+        "サンクトペテルブルク北岸":{"attr":"land","base":True,"armyDestination":[],"fleetDestination":["バレンツ海","ノルウェー"]},#26
+        "サンクトペテルブルク南岸":{"attr":"land","base":True,"armyDestination":[],"fleetDestination":["ボスニア海","フィンランド","リヴォニア"]},#26
+        "スウェーデン":{"attr":"land","base":True,"armyDestination":["ノルウェー","フィンランド"],"fleetDestination":["ボスニア海","バルト海","スカゲラク","フィンランド","ノルウェー"]},#27
+        "シリア":{"attr":"land","base":False,"armyDestination":["アルメニア","スミルナ"],"fleetDestination":["東地中海","スミルナ"]},
+        "トリエステ":{"attr":"land","base":True,"armyDestination":["アルバニア","セルビア","ブダペスト","ウィーン","チロル","ヴェニス"],"fleetDestination":["アドリア海","ヴェニス","アルバニア"]},#28
+        "チュニス":{"attr":"land","base":True,"armyDestination":["北アフリカ"],"fleetDestination":["イオニア海","ティレニア海","西地中海","北アフリカ"]},#29
+        "トスカーナ":{"attr":"land","base":False,"armyDestination":["ピエモント","ヴェニス","ローマ"],"fleetDestination":["リヨン湾","ティレニア海","ピエモント","ローマ"]},
+        "チロル":{"attr":"land","base":False,"armyDestination":["ウィーン","ボヘミア","ミュンヘン","ピエモント","ヴェニス","トリエステ"],"fleetDestination":[]},
+        "ウクライナ":{"attr":"land","base":False,"armyDestination":["セヴァストポリ","モスクワ","ワルシャワ","ガリシア","ルーマニア"],"fleetDestination":[]},
+        "ヴェニス":{"attr":"land","base":True,"armyDestination":["トリエステ","チロル","ピエモント","トスカーナ","ローマ","アヴュリア"],"fleetDestination":["アドリア海","トリエステ","アヴュリア"]},#30
+        "ウィーン":{"attr":"land","base":True,"armyDestination":["ブダペスト","ガリシア","ボヘミア","チロル","トリエステ"],"fleetDestination":[]},#31
+        "ウェールズ":{"attr":"land","base":False,"armyDestination":["リヴァプール","ヨークシャー","ロンドン"],"fleetDestination":["アイリッシュ海","イギリス海峡","リヴァプール","ロンドン"]},
+        "ワルシャワ":{"attr":"land","base":True,"armyDestination":["ウクライナ","モスクワ","リヴォニア","プロシア","シレジア","ガリシア"],"fleetDestination":[]},#32
+        "ヨークシャー":{"attr":"land","base":False,"armyDestination":["エディンバラ","リヴァプール","ウェールズ","ロンドン"],"fleetDestination":["北海","エディンバラ","ロンドン"]},
+        "北大西洋":{"attr":"sea","base":False,"armyDestination":[],"fleetDestination":["ノルウェー海","アイリッシュ海","中大西洋","クライド","リヴァプール"]},
+        "アイリッシュ海":{"attr":"sea","base":False,"armyDestination":[],"fleetDestination":["北大西洋","中大西洋","イギリス海峡","ウェールズ","リヴァプール"]},
+        "中大西洋":{"attr":"sea","base":False,"armyDestination":["スペイン"],"fleetDestination":["北大西洋","アイリッシュ海","イギリス海峡","西地中海","ブレスト","ガスコーニュ","スペイン北岸","ポルトガル","スペイン南岸","北アフリカ"]},
+        "西地中海":{"attr":"sea","base":False,"armyDestination":["スペイン"],"fleetDestination":["中大西洋","リヨン湾","ティレニア海","スペイン南岸","北アフリカ","チュニス"]},
+        "リヨン湾":{"attr":"sea","base":False,"armyDestination":["スペイン"],"fleetDestination":["ティレニア海","西地中海","スペイン南岸","マルセイユ","ピエモント","トスカーナ"]},
+        "ティレニア海":{"attr":"sea","base":False,"armyDestination":[],"fleetDestination":["リヨン湾","西地中海","イオニア海","トスカーナ","ローマ","ナポリ","チュニス"]},
+        "イオニア海":{"attr":"sea","base":False,"armyDestination":[],"fleetDestination":["ティレニア海","アドリア海","エーゲ海","東地中海","チュニス","ナポリ","アヴュリア","アルバニア","ギリシャ"]},
+        "アドリア海":{"attr":"sea","base":False,"armyDestination":[],"fleetDestination":["イオニア海","アヴュリア","ヴェニス","トリエステ","アルバニア"]},
+        "エーゲ海":{"attr":"sea","base":False,"armyDestination":["ブルガリア"],"fleetDestination":["イオニア海","東地中海","ギリシャ","ブルガリア南岸","コンスタンティノープル","スミルナ"]},
+        "東地中海":{"attr":"sea","base":False,"armyDestination":[],"fleetDestination":["イオニア海","エーゲ海","スミルナ","シリア"]},
+        "黒海":{"attr":"sea","base":False,"armyDestination":["ブルガリア"],"fleetDestination":["セヴァストポリ","ルーマニア","ブルガリア東岸","コンスタンティノープル","アンカラ","アルメニア"]},
+        "ノルウェー海":{"attr":"sea","base":False,"armyDestination":[],"fleetDestination":["北大西洋","北海","バレンツ海","クライド","エディンバラ","ノルウェー"]},
+        "イギリス海峡":{"attr":"sea","base":False,"armyDestination":[],"fleetDestination":["アイリッシュ海","中大西洋","北海","ウェールズ","ロンドン","ブレスト","ピカルディ","ベルギー"]},
+        "北海":{"attr":"sea","base":False,"armyDestination":[],"fleetDestination":["ノルウェー海","イギリス海峡","ヘルゴランド湾","スカゲラク","ノルウェー","デンマーク","オランダ","ベルギー","ロンドン","ヨークシャー","エディンバラ"]},
+        "ヘルゴランド湾":{"attr":"sea","base":False,"armyDestination":[],"fleetDestination":["北海","デンマーク","キール","オランダ"]},
+        "スカゲラク":{"attr":"sea","base":False,"armyDestination":[],"fleetDestination":["北海","デンマーク","ノルウェー","スウェーデン"]},
+        "バルト海":{"attr":"sea","base":False,"armyDestination":[],"fleetDestination":["ボスニア海","スウェーデン","リヴォニア","プロシア","ベルリン","キール"]},
+        "ボスニア海":{"attr":"sea","base":False,"armyDestination":["サンクトペテルブルク"],"fleetDestination":["バルト海","スウェーデン","フィンランド","サンクトペテルブルク南岸","リヴォニア"]},
+        "バレンツ海":{"attr":"sea","base":False,"armyDestination":["サンクトペテルブルク"],"fleetDestination":["ノルウェー海","サンクトペテルブルク北岸","ノルウェー"]}
     }
+    
+    
+    
     def __init__(self,bot):
         self.bot=bot
+        
         #self.bot.remove_command("help")
         
     @commands.command()#group()
@@ -148,20 +156,6 @@ class MyCog(commands.Cog):
         name,val=random.choice(list(self.country.items()))
         await ctx.send(str(name)+":"+str(val))
            
-#     @commands.command()#group() 
-#     async def pic(self,ctx):
-        
-#         """無地地図チャット欄の画像を返せるかテスト"""
-#         if ctx.invoked_subcommand is None:
-#         fileObj = discord.File(self.savedPictureName)
-#         resp= requests.get("https://cdn.discordapp.com/attachments/866874154297196594/866874172965257236/image1.png", stream=True).raw
-#         image= np.asarray(bytearray(resp.read()), dtype="uint8")
-#         image= cv2.imdecode(image, cv2.IMREAD_COLOR)
-#         _, num_bytes = cv2.imencode('.jpeg',imread_web(image))
-#         num_bytes = num_bytes.tobytes()
-#         fileObj = discord.File(io.BytesIO(num_bytes),filename="blank.png")
-#         await ctx.send(file=fileObj)
-
     @commands.command()#group() 
     async def clear(self,ctx):
         """キャンバスを初期化して返す"""
@@ -175,7 +169,7 @@ class MyCog(commands.Cog):
         await ctx.send(file=fileObj)
         
     @commands.command()#group() 
-    async def pic2(self,ctx):
+    async def pic(self,ctx):
         """現在のキャンバスの状態を返す，初期化済みの場合真っ黒"""
 #         if ctx.invoked_subcommand is None:
 #         global canvas
@@ -250,18 +244,6 @@ class MyCog(commands.Cog):
         await ctx.send("point:"+str(point))
         await ctx.send(file=fileObj)
         self.fillMask=np.zeros([self.width+2,self.height+2],np.uint8)
-
-    
-# def imread_web(url):
-#     # 画像をリクエストする
-#     res = requests.get(url)
-#     img = None
-#     # Tempfileを作成して即読み込む
-#     with tempfile.NamedTemporaryFile(dir='./') as fp:
-#         fp.write(res.content)
-#         fp.file.seek(0)
-#         img = cv2.imread(fp.name)
-#     return img
 
 def setup(bot):
     return bot.add_cog(MyCog(bot))
