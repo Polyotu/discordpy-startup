@@ -150,10 +150,11 @@ class MyCog(commands.Cog):
            
     @commands.command()#group() 
     async def pic(self,ctx):
-        """無地地図チャット欄の画像を返せるかテスト"""
+        pass
+#         """無地地図チャット欄の画像を返せるかテスト"""
 #         if ctx.invoked_subcommand is None:
 #         fileObj = discord.File(self.savedPictureName)
-        resp= requests.get("https://cdn.discordapp.com/attachments/866874154297196594/866874172965257236/image1.png", stream=True).raw
+#         resp= requests.get("https://cdn.discordapp.com/attachments/866874154297196594/866874172965257236/image1.png", stream=True).raw
 #         image= np.asarray(bytearray(resp.read()), dtype="uint8")
 #         image= cv2.imdecode(image, cv2.IMREAD_COLOR)
 #         _, num_bytes = cv2.imencode('.jpeg',imread_web(image))
