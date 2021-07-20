@@ -136,7 +136,7 @@ class MyCog(commands.Cog):
         self.bot=bot
         #self.bot.remove_command("help")
         
-    def imread_web(url):
+    def imread_web(self,url):
         # 画像をリクエストする
         res = requests.get(url)
         img = None
