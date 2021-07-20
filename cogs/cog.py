@@ -151,10 +151,17 @@ class MyCog(commands.Cog):
     
     @commands.command()#group()
     async def status(self,ctx):
-        """国の初期ステータスをランダムに返す"""
+        """ランダムに選んだ特定の国の初期ステータスを返す"""
 #         if ctx.invoked_subcommand is None:
         name,val=random.choice(list(self.country.items()))
         await ctx.send(str(name)+":"+str(val))
+        
+    @commands.command()#group()
+    async def destination(self,ctx):
+        """ランダムに選んだ特定の地域について移動可能な経路を返す"""
+#         if ctx.invoked_subcommand is None:
+        name,val=random.choice(list(self.region.items()))
+        await ctx.send(str(name)+":陸路"+str(val["armyDestination"])+":航路"+str(val["fleetDestination"]))
            
     @commands.command()#group() 
     async def clear(self,ctx):
