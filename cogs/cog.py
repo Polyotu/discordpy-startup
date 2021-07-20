@@ -153,7 +153,7 @@ class MyCog(commands.Cog):
         """無地地図チャット欄の画像を返せるかテスト"""
 #         if ctx.invoked_subcommand is None:
 #         fileObj = discord.File(self.savedPictureName)
-        _, num_bytes = cv2.imencode('.jpeg',self.imread_web("https://cdn.discordapp.com/attachments/866874154297196594/866874172965257236/image1.png"))
+        _, num_bytes = cv2.imencode('.jpeg',imread_web("https://cdn.discordapp.com/attachments/866874154297196594/866874172965257236/image1.png"))
         num_bytes = num_bytes.tobytes()
         fileObj = discord.File(io.BytesIO(num_bytes),filename="blank.png")
         await ctx.send(file=fileObj)
